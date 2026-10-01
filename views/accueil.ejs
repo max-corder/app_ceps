@@ -3,8 +3,34 @@
 <section class="ceps-hero">
     <h1><%= NOM_ENTREPRISE %></h1>
     <p>Votre partenaire de confiance en produits pharmaceutiques et cosmétiques.</p>
-    <a href="/index.php?page=galerie" class="ceps-btn ceps-btn-large">Voir la galerie ➜</a>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 1.25rem;">
+        <a href="/index.php?page=galerie" class="ceps-btn ceps-btn-large">Voir la galerie ➜</a>
+        <a href="/index.php?page=telecharger_apk" class="ceps-btn ceps-btn-large" style="background: #ffffff; color: #0f766e; border: 2px solid #ffffff; font-weight: 700;">
+            <i class="bi bi-android2 text-success"></i> Telechaje App (APK) 📲
+        </a>
+    </div>
 </section>
+
+<!-- Banner Téléchargement APK Android Mobile -->
+<div style="background: linear-gradient(135deg, #042f2e, #0f766e); color: white; border-radius: 16px; padding: 1.5rem; margin: 2rem 0; box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+    <div style="flex: 1; min-width: 260px;">
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.85rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.5rem;">
+            <i class="bi bi-phone-fill"></i> DISPONIB POU ANDROID AK IPHONE
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; margin: 0 0 0.5rem 0; color: #ffffff;">Enstale Aplikasyon CEPS la sou telefòn ou</h2>
+        <p style="margin: 0; font-size: 0.95rem; opacity: 0.9; color: #ccfbf1;">
+            Aksè dirèk ak rapid san ouvri navigatè, notifikasyon lè kòmand pare, kòmande an 1 klik.
+        </p>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <button onclick="declencherInstallation()" style="background: #10b981; color: #ffffff; border: none; font-weight: 700; padding: 12px 22px; border-radius: 12px; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);">
+            <i class="bi bi-download" style="font-size: 1.15rem;"></i> Enstale Kounye a (1-Klik)
+        </button>
+        <a href="/index.php?page=telecharger_apk" style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.4); font-weight: 600; padding: 12px 18px; border-radius: 12px; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px;">
+            Gade Etap Yo <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+</div>
 
 <!-- Section bienvenue : texte + image côte à côte -->
 <div class="image" style="margin: 2rem 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">

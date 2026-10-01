@@ -20,6 +20,7 @@ declare module 'express-session' {
 }
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // Setup Multer for file uploads
@@ -76,7 +77,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   const flashErreur = req.session.flash?.erreur;
   if (req.session.flash) delete req.session.flash;
 
-  res.locals.NOM_ENTREPRISE = 'CEPS - Centre Équipements Produit de Santé';
+  res.locals.NOM_ENTREPRISE = 'ceps.com — Centre Équipements Produit de Santé';
   res.locals.BASE_URL = '';
   res.locals.NUMERO_MONCASH = '+509 31 77 66 47(HERARD JUGENS)';
   res.locals.NUMERO_NATCASH = '+509 32 10 10 44 (GLEMAUD EZECHIEL)';
@@ -96,6 +97,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   };
 
   next();
+});
+
+// Route directes de téléchargement APK
+app.get(['/telecharger-apk', '/apk', '/download-apk'], (req: Request, res: Response) => {
+  res.redirect('/index.php?page=telecharger_apk');
 });
 
 // Front-Controller Dispatcher:
@@ -137,6 +143,10 @@ app.all(['/', '/index.php'], upload.any(), async (req: Request, res: Response) =
         const q = (req.query.q as string) || '';
         const produits = store.getProducts({ q, activeOnly: true });
         return res.render('resultats_recherche', { q, produits });
+      }
+
+      case 'telecharger_apk': {
+        return res.render('telecharger_apk');
       }
 
       case 'apropos': {
@@ -808,6 +818,14 @@ app.get('/login', (req, res) => res.redirect('/index.php?page=login'));
 app.get('/inscription', (req, res) => res.redirect('/index.php?page=inscription'));
 app.get('/contact', (req, res) => res.redirect('/index.php?page=contact'));
 app.get('/apropos', (req, res) => res.redirect('/index.php?page=apropos'));
+
+// Catch-all fallback : si yon URL pa jwenn oswa si Cloudflare voye yon move chemen tankou $2
+app.use((req: Request, res: Response) => {
+  if (req.path.includes('apk') || req.path.includes('telecharg')) {
+    return res.redirect('/index.php?page=telecharger_apk');
+  }
+  return res.redirect('/index.php?page=accueil');
+});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Serveur CEPS démarré avec succès sur http://0.0.0.0:${PORT}`);

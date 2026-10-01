@@ -25,7 +25,7 @@
     <div class="ceps-container ceps-nav">
         <a href="/index.php?page=accueil" class="ceps-logo">
             <img src="/assets/images/logo_ceps.jpeg" alt="Logo CEPS" class="ceps-logo-img">
-            CEPS
+            <span>ceps.com</span>
         </a>
 
         <!-- Barre de recherche universelle par nom de produit -->
@@ -34,6 +34,13 @@
             <input type="search" name="q" placeholder="Rechercher un produit..." value="<%= typeof q !== 'undefined' ? q : '' %>" required>
             <button type="submit"><i class="bi bi-search"></i></button>
         </form>
+
+        <a href="/index.php?page=telecharger_apk" 
+            class="d-lg-none" 
+            style="background: #10b981; color: #ffffff; padding: 7px 12px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; text-decoration: none; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);"
+            title="Telechaje APK sou telefòn ou">
+            <i class="bi bi-download"></i> APK
+        </a>
 
         <button type="button" 
             class="ceps-menu-toggle d-lg-none" 
@@ -49,6 +56,9 @@
             <a href="/index.php?page=galerie" class="<%= current === 'galerie' && !curType ? 'active' : '' %>">Produits</a>
             <a href="/index.php?page=galerie&type=cosmetique" class="<%= current === 'galerie' && curType === 'cosmetique' ? 'active' : '' %>">Cosmétiques</a>
             <a href="/index.php?page=galerie&type=pharmaceutique" class="<%= current === 'galerie' && curType === 'pharmaceutique' ? 'active' : '' %>">Médicaments</a>
+            <a href="/index.php?page=telecharger_apk" class="<%= current === 'telecharger_apk' ? 'active' : '' %>" style="color: #34d399; font-weight: 700;">
+                <i class="bi bi-phone-fill"></i> Telechaje APK
+            </a>
             <a href="/index.php?page=apropos" class="<%= current === 'apropos' ? 'active' : '' %>">À propos</a>
             <a href="/index.php?page=contact" class="<%= current === 'contact' ? 'active' : '' %>">Contact</a>
             
