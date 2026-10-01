@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Commandes à approuver</h2>
+
+    <table class="ceps-table">
+        <thead><tr><th>N°</th><th>Client</th><th>Montant total</th><th>Statut</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+        <% for (const commande of commandes) { %>
+            <tr>
+                <td>#<%= commande.id_commande %></td>
+                <td><%= commande.prenom %> <%= commande.nom %> (<%= commande.email %>)</td>
+                <td><%= Number(commande.montant_total).toFixed(2) %> $</td>
+                <td><span class="ceps-statut ceps-statut-<%= commande.statut %>"><%= commande.statut.replace('_', ' ').toUpperCase() %></span>
+                    <% if (commande.montant_acompte) { %>
+                        <br><span class="ceps-note-inline">💰 Dépôt reçu : <%= Number(commande.montant_acompte).toFixed(2) %> $</span>
+                    <% } %>
+                </td>
+                <td><%= commande.date_commande %></td>
+                <td>
+                    <a href="/index.php?page=admin_commande_details&id=<%= commande.id_commande %>" class="ceps-btn ceps-btn-petit">Examiner</a>
+
+                    <form method="post" action="/index.php?page=admin_commande_approuver" class="ceps-form-inline"
+                          onsubmit="return confirm('Approuver cette commande ?')">
+                        <input type="hidden" name="id" value="<%= commande.id_commande %>">
+                        <button type="submit" class="ceps-btn ceps-btn-petit">Approuver</button>
+                    </form>
+
+                    <form method="post" action="/index.php?page=admin_commande_refuser" class="ceps-form-inline"
+                          onsubmit="return confirm('Refuser cette commande ?')">
+                        <input type="hidden" name="id" value="<%= commande.id_commande %>">
+                        <button type="submit" class="ceps-lien-danger ceps-btn-lien">Refuser</button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+        <% if (commandes.length === 0) { %>
+            <tr><td colspan="6">Aucune commande en attente.</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('../partials/footer') %>

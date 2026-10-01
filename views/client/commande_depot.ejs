@@ -1,0 +1,81 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Dépôt pour la commande #<%= idCommande %></h2>
+
+    <p class="ceps-note">
+        Un administrateur CEPS a proposé un nouveau prix pour cette commande. Vous pouvez envoyer un
+        <strong>dépôt (acompte)</strong> dès maintenant, avant même que la commande soit définitivement approuvée.
+    </p>
+
+    <table class="ceps-table">
+        <thead>
+        <tr><th>Produit</th><th>Quantité</th><th>Prix négocié</th><th>Sous-total</th></tr>
+        </thead>
+        <tbody>
+        <% for (const ligne of details) { %>
+            <tr>
+                <td><%= ligne.nom_produit %></td>
+                <td><%= ligne.quantite %></td>
+                <td><%= Number(ligne.prix_unitaire_negocie).toFixed(2) %> $</td>
+                <td><%= Number(ligne.sous_total).toFixed(2) %> $</td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <p class="ceps-total" style="font-weight:700; margin:1rem 0;">Total de la commande : <%= Number(order.montant_total).toFixed(2) %> $</p>
+
+    <% if (order.montant_acompte) { %>
+        <div class="ceps-alert ceps-alert-succes" style="background:#e6f7ef; color:#0a6644; border:1px solid #12c98a; padding:1rem; border-radius:8px; margin-bottom:1.5rem;">
+            Un dépôt de <%= Number(order.montant_acompte).toFixed(2) %> $
+            via <%= (order.mode_paiement_acompte || '').toUpperCase() %> a déjà été envoyé le
+            <%= order.date_acompte %>. Vous pouvez envoyer un nouveau dépôt ci-dessous pour le remplacer
+            tant que la commande n'est pas encore approuvée.
+        </div>
+    <% } %>
+
+    <div class="ceps-paiement-moyens">
+        <div class="ceps-paiement-carte">
+            <h4>📱 MonCash</h4>
+            <p><%= NUMERO_MONCASH %></p>
+        </div>
+        <div class="ceps-paiement-carte">
+            <h4>📱 NatCash</h4>
+            <p><%= NUMERO_NATCASH %></p>
+        </div>
+        <div class="ceps-paiement-carte">
+            <h4>🏦 BNC</h4>
+            <p><%= NUMERO_BNC %></p>
+        </div>
+    </div>
+
+    <form method="post" action="/index.php?page=client_commande_depot_enregistrer"
+          enctype="multipart/form-data" class="ceps-form"
+          onsubmit="return confirm('Confirmer l\'envoi de ce dépôt ?')">
+        <input type="hidden" name="id_commande" value="<%= idCommande %>">
+
+        <label>Montant du dépôt ($)
+            <input type="number" step="0.01" min="0.01" max="<%= order.montant_total %>" name="montant" required>
+        </label>
+
+        <label>Moyen de paiement utilisé
+            <select name="mode_paiement" required>
+                <option value="moncash">MonCash</option>
+                <option value="natcash">NatCash</option>
+                <option value="bnc">BNC (virement bancaire)</option>
+            </select>
+        </label>
+
+        <label>Photo de la preuve du dépôt
+            <input type="file" name="preuve" accept="image/*" required>
+        </label>
+
+        <button type="submit" class="ceps-btn ceps-btn-large">Envoyer le dépôt</button>
+    </form>
+
+    <div style="margin-top:1.5rem;">
+        <a href="/index.php?page=client_historique" class="ceps-btn ceps-btn-secondaire">← Retour à mon historique</a>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

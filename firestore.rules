@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Products & catalog
+    match /products/{productId} {
+      allow read, write: if true;
+    }
+
+    match /categories/{categoryId} {
+      allow read, write: if true;
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Orders & details
+    match /orders/{orderId} {
+      allow read, write: if true;
+
+      match /details/{detailId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Sales & cash records
+    match /sales/{saleId} {
+      allow read, write: if true;
+    }
+
+    // Chat conversations & messages
+    match /conversations/{conversationId} {
+      allow read, write: if true;
+
+      match /messages/{messageId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Customer reviews & comments
+    match /comments/{commentId} {
+      allow read, write: if true;
+    }
+
+    // Default deny for any undefined path
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

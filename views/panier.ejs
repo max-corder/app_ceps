@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+<section class="ceps-section">
+    <h2>Mon panier</h2>
+
+    <% const panierKeys = Object.keys(panier || {}); %>
+    <% if (panierKeys.length === 0) { %>
+        <p>Votre panier est vide. <a href="/index.php?page=galerie">Voir la galerie</a></p>
+    <% } else { %>
+        <table class="ceps-table">
+            <thead>
+            <tr><th>Produit</th><th>Quantité</th><th>Prix unitaire</th><th>Sous-total</th><th></th></tr>
+            </thead>
+            <tbody>
+            <% let total = 0; %>
+            <% for (const idProduit of panierKeys) { 
+                const ligne = panier[idProduit];
+                const sousTotal = ligne.quantite * ligne.prix;
+                total += sousTotal;
+            %>
+                <tr>
+                    <td><%= ligne.nom %></td>
+                    <td><%= ligne.quantite %></td>
+                    <td><%= Number(ligne.prix).toFixed(2) %> $</td>
+                    <td><%= Number(sousTotal).toFixed(2) %> $</td>
+                    <td>
+                        <form method="post" action="/index.php?page=panier_retirer" class="ceps-form-inline">
+                            <input type="hidden" name="id" value="<%= idProduit %>">
+                            <button type="submit" class="ceps-lien-danger ceps-btn-lien">Retirer</button>
+                        </form>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+        <p class="ceps-total">Total : <%= Number(total).toFixed(2) %> $</p>
+
+        <% if (user) { %>
+            <form method="post" action="/index.php?page=client_commander"
+                  onsubmit="return confirm('Continuer vers le paiement pour cette commande ?')">
+                <button type="submit" class="ceps-btn ceps-btn-large">Valider ma commande</button>
+            </form>
+            <p class="ceps-note" style="margin-top: 1rem;">Vous choisirez ensuite de payer tout de suite ou d'envoyer la commande pour négociation.</p>
+        <% } else { %>
+            <a href="/index.php?page=login" class="ceps-btn ceps-btn-large">Se connecter pour commander</a>
+        <% } %>
+    <% } %>
+</section>
+
+<%- include('partials/footer') %>

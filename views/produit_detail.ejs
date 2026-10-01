@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+
+<section class="ceps-section ceps-detail-produit">
+    <div class="ceps-detail-image">
+        <% if (produit.image) { %>
+            <img src="/uploads/produits/<%= produit.image %>" alt="<%= produit.nom_produit %>">
+        <% } else { %>
+            <div class="ceps-card-placeholder" style="height:320px; font-size:4rem;">✚</div>
+        <% } %>
+    </div>
+
+    <div class="ceps-detail-infos">
+        <h2><%= produit.nom_produit %></h2>
+        <p class="ceps-detail-description"><%= produit.description %></p>
+        <p class="ceps-prix ceps-detail-prix"><%= Number(produit.prix_unitaire).toFixed(2) %> $</p>
+
+        <% if (produit.quantite_disponible > 0) { %>
+            <p class="ceps-badge">En stock (<%= produit.quantite_disponible %> disponibles)</p>
+        <% } else { %>
+            <p class="ceps-badge" style="background:#fdeaea; color:#d64545;">Rupture de stock</p>
+        <% } %>
+
+        <form method="post" action="/index.php?page=panier_ajouter" class="ceps-detail-form">
+            <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+            <input type="hidden" name="retour" value="index.php?page=produit_detail&id=<%= produit.id_produit %>">
+
+            <label>Quantité</label>
+            <div class="ceps-qte-selecteur">
+                <button type="button" onclick="ajusterQte(-1)">−</button>
+                <input type="number" name="quantite" id="qteProduit" value="1" min="1" max="<%= produit.quantite_disponible %>">
+                <button type="button" onclick="ajusterQte(1)">+</button>
+            </div>
+
+            <button type="submit" class="ceps-btn ceps-btn-large" <%= produit.quantite_disponible === 0 ? 'disabled' : '' %>>
+                Ajouter au panier
+            </button>
+        </form>
+
+        <a href="/index.php?page=galerie" class="ceps-lien-retour">← Retour à la galerie</a>
+    </div>
+</section>
+
+<script>
+function ajusterQte(delta) {
+    const champ = document.getElementById('qteProduit');
+    const max = parseInt(champ.max || 999, 10);
+    let valeur = parseInt(champ.value || 1, 10) + delta;
+    if (valeur < 1) valeur = 1;
+    if (valeur > max) valeur = max;
+    champ.value = valeur;
+}
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Discuter avec CEPS</h2>
+
+    <div class="ceps-chat-fenetre" style="background:#fff; border:1px solid #dfe7e3; border-radius:10px; padding:1.2rem; max-height:450px; overflow-y:auto; margin-bottom:1.5rem; display:flex; flex-direction:column; gap:0.8rem;">
+        <% for (const message of messages) { %>
+            <% if (message.expediteur === 'system') { %>
+                <div class="ceps-message ceps-message-system" style="background:#f4f8f6; border-left:4px solid #0f8a5f; padding:0.8rem; border-radius:6px; font-size:0.9rem;">
+                    <p style="margin:0;"><%= message.contenu %></p>
+                    <% if (message.preuve_paiement) { %>
+                        <div style="margin-top:0.5rem;">
+                            <a href="/uploads/preuves/<%= message.preuve_paiement %>" target="_blank">
+                                <img src="/uploads/preuves/<%= message.preuve_paiement %>" alt="Preuve de paiement" class="ceps-preuve-img" style="max-width:150px; border-radius:6px; border:1px solid #ccc;">
+                            </a>
+                        </div>
+                    <% } %>
+                    <small style="color:#7c8a83; display:block; margin-top:0.3rem;"><%= message.date_envoi %></small>
+                </div>
+            <% } else { %>
+                <div class="ceps-message ceps-message-<%= message.expediteur === 'client' ? 'moi' : 'autre' %>" style="max-width:75%; padding:0.8rem 1rem; border-radius:12px; align-self:<%= message.expediteur === 'client' ? 'flex-end' : 'flex-start' %>; background:<%= message.expediteur === 'client' ? '#0f8a5f' : '#eef5f1' %>; color:<%= message.expediteur === 'client' ? '#fff' : '#1f2d27' %>;">
+                    <strong><%= message.expediteur === 'client' ? 'Moi' : 'CEPS Support' %></strong>
+                    <p style="margin:0.3rem 0 0 0;"><%= message.contenu %></p>
+                    <small style="opacity:0.8; display:block; margin-top:0.3rem; font-size:0.75rem;"><%= message.date_envoi %></small>
+                </div>
+            <% } %>
+        <% } %>
+        <% if (messages.length === 0) { %>
+            <p style="text-align:center; color:#7c8a83;">Aucun message pour le moment. Écrivez à CEPS pour toute question sur vos commandes.</p>
+        <% } %>
+    </div>
+
+    <form method="post" action="/index.php?page=client_chat_envoyer" class="ceps-form-chat" style="display:flex; gap:0.8rem;">
+        <textarea name="contenu" rows="2" placeholder="Votre message..." required style="flex:1; border:1px solid #dfe7e3; border-radius:8px; padding:0.8rem;"></textarea>
+        <button type="submit" class="ceps-btn">Envoyer</button>
+    </form>
+</section>
+
+<%- include('../partials/footer') %>

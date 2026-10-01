@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<section class="ceps-hero">
+    <h1><%= NOM_ENTREPRISE %></h1>
+    <p>Votre partenaire de confiance en produits pharmaceutiques et cosmétiques.</p>
+    <a href="/index.php?page=galerie" class="ceps-btn ceps-btn-large">Voir la galerie ➜</a>
+</section>
+
+<!-- Section bienvenue : texte + image côte à côte -->
+<div class="image" style="margin: 2rem 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <img src="/assets/images/ecran2.jpeg" width="100%" height="auto" alt="CEPS Présentation" style="display:block;">
+</div>
+
+<section class="ceps-section">
+    <h2>Nos produits phares</h2>
+    <div class="ceps-grid">
+        <% for (const produit of produitsAccueil) { %>
+            <div class="ceps-card">
+                <a href="/index.php?page=produit_detail&id=<%= produit.id_produit %>" class="ceps-image-cliquable">
+                <% if (produit.image) { %>
+                    <img src="/uploads/produits/<%= produit.image %>" alt="<%= produit.nom_produit %>">
+                <% } else { %>
+                    <div class="ceps-card-placeholder">✚</div>
+                <% } %>
+                </a>
+                <h3><%= produit.nom_produit %></h3>
+                <p class="ceps-prix"><%= Number(produit.prix_unitaire).toFixed(2) %> $</p>
+                <span class="ceps-badge"><%= produit.nom_categorie %></span>
+            </div>
+        <% } %>
+    </div>
+    <div style="text-align:center; margin-top: 2rem;">
+        <a href="/index.php?page=galerie" class="ceps-btn">+ Voir toute la galerie</a>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

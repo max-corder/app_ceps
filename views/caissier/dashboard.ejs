@@ -1,0 +1,91 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Caisse CEPS</h2>
+
+    <div class="ceps-stats-grid">
+        <div class="ceps-stat-card">
+            <span class="ceps-stat-valeur"><%= Number(gainDuJour).toFixed(2) %> $</span>
+            <span class="ceps-stat-label">Gain aujourd'hui</span>
+        </div>
+    </div>
+
+    <div class="ceps-caisse-layout" style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; margin-top:1.5rem;">
+
+        <!-- Liste des produits -->
+        <div class="ceps-caisse-produits">
+            <h3>Produits disponibles</h3>
+            <table class="ceps-table">
+                <thead><tr><th>Produit</th><th>Prix</th><th>Stock</th><th></th></tr></thead>
+                <tbody>
+                <% for (const produit of produits) { %>
+                    <tr>
+                        <td><%= produit.nom_produit %></td>
+                        <td><%= Number(produit.prix_unitaire).toFixed(2) %> $</td>
+                        <td><%= produit.quantite_disponible %></td>
+                        <td>
+                            <form method="post" action="/index.php?page=caissier_panier_ajouter" class="ceps-form-inline">
+                                <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+                                <input type="number" name="quantite" value="1" min="1" max="<%= produit.quantite_disponible %>" class="ceps-input-qte">
+                                <button type="submit" class="ceps-btn ceps-btn-petit" <%= produit.quantite_disponible === 0 ? 'disabled' : '' %>>Ajouter</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Panier de vente en cours -->
+        <div class="ceps-caisse-panier" style="background:#fff; border:1px solid #dfe7e3; border-radius:10px; padding:1.2rem;">
+            <h3>🛒 Panier de vente</h3>
+            <% 
+            const caisseKeys = Object.keys(panierCaisse || {});
+            if (caisseKeys.length === 0) { 
+            %>
+                <p>Aucun produit sélectionné.</p>
+            <% } else { %>
+                <table class="ceps-table">
+                    <thead><tr><th>Produit</th><th>Qté</th><th>Sous-total</th><th></th></tr></thead>
+                    <tbody>
+                    <% 
+                    let totalPanier = 0;
+                    for (const idProduit of caisseKeys) { 
+                        const ligne = panierCaisse[idProduit];
+                        const sousTotal = ligne.quantite * ligne.prix;
+                        totalPanier += sousTotal;
+                    %>
+                        <tr>
+                            <td><%= ligne.nom %></td>
+                            <td><%= ligne.quantite %></td>
+                            <td><%= Number(sousTotal).toFixed(2) %> $</td>
+                            <td>
+                                <form method="post" action="/index.php?page=caissier_panier_retirer" class="ceps-form-inline">
+                                    <input type="hidden" name="id" value="<%= idProduit %>">
+                                    <button type="submit" class="ceps-lien-danger ceps-btn-lien">✖</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+
+                <p class="ceps-total" style="font-weight:700; margin:1rem 0;">Total : <%= Number(totalPanier).toFixed(2) %> $</p>
+
+                <form method="post" action="/index.php?page=caissier_valider" class="ceps-form" onsubmit="return confirm('Encaisser cette vente ?')">
+                    <label>Mode de paiement
+                        <select name="mode_paiement" required>
+                            <option value="especes">Espèces</option>
+                            <option value="moncash">MonCash</option>
+                            <option value="natcash">NatCash</option>
+                            <option value="carte">Carte bancaire</option>
+                        </select>
+                    </label>
+                    <button type="submit" class="ceps-btn ceps-btn-large" style="width:100%; margin-top:1rem;">Valider la vente et imprimer reçu</button>
+                </form>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

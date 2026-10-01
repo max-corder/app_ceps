@@ -1,0 +1,187 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Utilisateurs de la plateforme CEPS (clients, caissiers, administrateurs)",
+      "type": "object",
+      "properties": {
+        "id_utilisateur": { "type": "number", "description": "ID unique numérique" },
+        "email": { "type": "string", "description": "Adresse email" },
+        "nom": { "type": "string", "description": "Nom de famille" },
+        "prenom": { "type": "string", "description": "Prénom" },
+        "mot_de_passe": { "type": "string", "description": "Mot de passe hashé" },
+        "id_role": { "type": "number", "description": "ID rôle (1=admin, 2=client, 3=caissier)" },
+        "nom_role": { "type": "string", "description": "Nom du rôle" },
+        "telephone": { "type": "string", "description": "Numéro de téléphone" },
+        "photo_profil": { "type": "string", "description": "Fichier photo de profil" },
+        "compte_bloque": { "type": "number", "description": "Statut de blocage (0 ou 1)" },
+        "tentatives_connexion": { "type": "number", "description": "Nombre de tentatives échouées" },
+        "latitude": { "type": "number", "description": "Coordonnée latitude" },
+        "longitude": { "type": "number", "description": "Coordonnée longitude" },
+        "consentement_localisation": { "type": "number", "description": "Consentement géolocalisation" },
+        "date_inscription": { "type": "string", "description": "Date d'inscription" }
+      },
+      "required": ["id_utilisateur", "email", "nom", "prenom", "id_role", "nom_role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Produits et équipements de santé CEPS",
+      "type": "object",
+      "properties": {
+        "id_produit": { "type": "number", "description": "ID du produit" },
+        "id_categorie": { "type": "number", "description": "ID de la catégorie" },
+        "nom_produit": { "type": "string", "description": "Nom du produit médical" },
+        "nom_categorie": { "type": "string", "description": "Nom de la catégorie" },
+        "description": { "type": "string", "description": "Description détaillée" },
+        "prix_unitaire": { "type": "number", "description": "Prix en USD" },
+        "image": { "type": "string", "description": "Image du produit" },
+        "actif": { "type": "boolean", "description": "Produit disponible au catalogue" },
+        "quantite_disponible": { "type": "number", "description": "Stock actuel disponible" },
+        "seuil_alerte": { "type": "number", "description": "Seuil d'alerte de réapprovisionnement" }
+      },
+      "required": ["id_produit", "id_categorie", "nom_produit", "prix_unitaire", "quantite_disponible"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Catégories de produits CEPS",
+      "type": "object",
+      "properties": {
+        "id_categorie": { "type": "number", "description": "ID catégorie" },
+        "nom_categorie": { "type": "string", "description": "Nom catégorie" },
+        "description": { "type": "string", "description": "Description" },
+        "type": { "type": "string", "description": "Type: materiel, consommable, equipement" }
+      },
+      "required": ["id_categorie", "nom_categorie", "type"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Commandes passées par les clients ou caissiers",
+      "type": "object",
+      "properties": {
+        "id_commande": { "type": "number", "description": "Numéro de commande" },
+        "id_utilisateur": { "type": "number", "description": "ID du client ou caissier" },
+        "montant_total": { "type": "number", "description": "Montant total en USD" },
+        "statut": { "type": "string", "description": "Statut: en_attente, modifiee_adm, approuvee, rejetee" },
+        "date_commande": { "type": "string", "description": "Date de passation" },
+        "date_approbation": { "type": "string", "description": "Date d'approbation" },
+        "approuve_par": { "type": "number", "description": "ID admin validateur" },
+        "mode_paiement": { "type": "string", "description": "Mode de paiement" },
+        "preuve_paiement": { "type": "string", "description": "Image reçu preuve" },
+        "montant_acompte": { "type": "number", "description": "Montant de l'acompte" },
+        "mode_paiement_acompte": { "type": "string", "description": "Moyen de paiement de l'acompte" },
+        "date_acompte": { "type": "string", "description": "Date du dépôt" },
+        "preuve_acompte": { "type": "string", "description": "Image preuve de l'acompte" }
+      },
+      "required": ["id_commande", "id_utilisateur", "montant_total", "statut", "date_commande"]
+    },
+    "OrderDetail": {
+      "title": "OrderDetail",
+      "description": "Lignes de détail d'une commande",
+      "type": "object",
+      "properties": {
+        "id_detail": { "type": "number", "description": "ID du détail" },
+        "id_commande": { "type": "number", "description": "ID de la commande parente" },
+        "id_produit": { "type": "number", "description": "ID du produit" },
+        "quantite": { "type": "number", "description": "Quantité commandée" },
+        "prix_unitaire_negocie": { "type": "number", "description": "Prix unitaire négocié" },
+        "sous_total": { "type": "number", "description": "Sous-total ligne" },
+        "nom_produit": { "type": "string", "description": "Nom du produit" }
+      },
+      "required": ["id_detail", "id_commande", "id_produit", "quantite", "prix_unitaire_negocie", "sous_total"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Historique des ventes conclues",
+      "type": "object",
+      "properties": {
+        "id_vente": { "type": "number", "description": "ID vente" },
+        "id_commande": { "type": "number", "description": "ID commande associée" },
+        "id_utilisateur": { "type": "number", "description": "ID acheteur" },
+        "date_vente": { "type": "string", "description": "Date de la vente" },
+        "montant_total": { "type": "number", "description": "Montant de la vente" },
+        "mode_paiement": { "type": "string", "description": "Mode de paiement" },
+        "enregistre_par": { "type": "number", "description": "Admin ou caissier ayant validé" }
+      },
+      "required": ["id_vente", "id_commande", "date_vente", "montant_total"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Fils de discussion entre clients et support CEPS",
+      "type": "object",
+      "properties": {
+        "id_conversation": { "type": "number", "description": "ID conversation" },
+        "id_client": { "type": "number", "description": "ID utilisateur client" },
+        "date_creation": { "type": "string", "description": "Date d'ouverture" },
+        "dernier_message": { "type": "string", "description": "Aperçu du dernier message" },
+        "non_lus": { "type": "number", "description": "Compteur de non lus" }
+      },
+      "required": ["id_conversation", "id_client"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Messages échangés dans le chat",
+      "type": "object",
+      "properties": {
+        "id_message": { "type": "number", "description": "ID message" },
+        "id_conversation": { "type": "number", "description": "ID conversation" },
+        "expediteur": { "type": "string", "description": "client, admin ou system" },
+        "contenu": { "type": "string", "description": "Texte du message" },
+        "preuve_paiement": { "type": "string", "description": "Image optionnelle attachée" },
+        "date_envoi": { "type": "string", "description": "Date et heure" },
+        "lu": { "type": "number", "description": "Lu (0 ou 1)" }
+      },
+      "required": ["id_message", "id_conversation", "expediteur", "contenu"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Commentaires et avis clients",
+      "type": "object",
+      "properties": {
+        "id_commentaire": { "type": "number", "description": "ID commentaire" },
+        "id_utilisateur": { "type": "number", "description": "ID auteur" },
+        "contenu_json": { "type": "string", "description": "Note et avis texte en JSON" },
+        "publie_par_admin": { "type": "number", "description": "Statut de publication/réponse" },
+        "date_commentaire": { "type": "string", "description": "Date du commentaire" }
+      },
+      "required": ["id_commentaire", "id_utilisateur", "contenu_json"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection des profils utilisateurs"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Catalogue des produits médicaux et stocks"
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Catégories de produits"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Commandes clients et ventes"
+    },
+    "/orders/{orderId}/details/{detailId}": {
+      "schema": "OrderDetail",
+      "description": "Détails et produits de chaque commande"
+    },
+    "/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Enregistrements de caisse et ventes confirmées"
+    },
+    "/conversations/{conversationId}": {
+      "schema": "Conversation",
+      "description": "Conversations de support client"
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Messages échangés dans les conversations"
+    },
+    "/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Avis et évaluations soumis par les clients"
+    }
+  }
+}

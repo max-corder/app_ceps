@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+<section class="ceps-section">
+    <h2>
+        <% if (reqQuery.type === 'cosmetique') { %>Cosmétiques
+        <% } else if (reqQuery.type === 'pharmaceutique') { %>Médicaments
+        <% } else { %>Galerie des produits
+        <% } %>
+    </h2>
+
+    <div class="ceps-filtres">
+        <a href="/index.php?page=galerie" class="ceps-filtre <%= !reqQuery.categorie && !reqQuery.type ? 'actif' : '' %>">Toutes les catégories</a>
+        <% for (const categorie of categories) { %>
+            <a href="/index.php?page=galerie&categorie=<%= categorie.id_categorie %>"
+               class="ceps-filtre <%= (reqQuery.categorie && Number(reqQuery.categorie) === Number(categorie.id_categorie)) ? 'actif' : '' %>">
+                <%= categorie.nom_categorie %>
+            </a>
+        <% } %>
+    </div>
+
+    <div class="ceps-grid">
+        <% for (const produit of produits) { %>
+            <div class="ceps-card">
+                <a href="/index.php?page=produit_detail&id=<%= produit.id_produit %>" class="ceps-image-cliquable">
+                <% if (produit.image) { %>
+                    <img src="/uploads/produits/<%= produit.image %>" alt="<%= produit.nom_produit %>">
+                <% } else { %>
+                    <div class="ceps-card-placeholder">✚</div>
+                <% } %>
+                </a>
+                <h3><%= produit.nom_produit %></h3>
+                <p><%= produit.description %></p>
+                <p class="ceps-prix"><%= Number(produit.prix_unitaire).toFixed(2) %> $</p>
+                <span class="ceps-badge"><%= produit.nom_categorie %></span>
+
+                <form method="post" action="/index.php?page=panier_ajouter" class="ceps-form-inline">
+                    <input type="hidden" name="id_produit" value="<%= produit.id_produit %>">
+                    <input type="hidden" name="retour" value="index.php?page=galerie<%= reqQuery.categorie ? '&categorie=' + reqQuery.categorie : '' %><%= reqQuery.type ? '&type=' + reqQuery.type : '' %>">
+                    <input type="number" name="quantite" value="1" min="1" class="ceps-input-qte">
+                    <button type="submit" class="ceps-btn">Ajouter au panier</button>
+                </form>
+            </div>
+        <% } %>
+        <% if (produits.length === 0) { %>
+            <p>Aucun produit dans cette catégorie pour le moment.</p>
+        <% } %>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

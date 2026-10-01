@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Mon historique de commandes</h2>
+
+    <% if (!historique || historique.length === 0) { %>
+        <p>Vous n'avez pas encore passé de commande. <a href="/index.php?page=galerie">Découvrir nos produits</a></p>
+    <% } else { %>
+        <% for (const item of historique) { 
+            const order = item.order;
+            const details = item.details;
+        %>
+            <div class="ceps-commande-bloc" style="background:#fff; border:1px solid #dfe7e3; border-radius:10px; padding:1.5rem; margin-bottom:1.5rem;">
+                <div class="ceps-commande-entete" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #dfe7e3; padding-bottom:0.8rem; margin-bottom:1rem;">
+                    <h3 style="margin:0;">Commande #<%= order.id_commande %></h3>
+                    <span class="ceps-statut ceps-statut-<%= order.statut %>"><%= order.statut.replace('_', ' ').toUpperCase() %></span>
+                </div>
+                <table class="ceps-table">
+                    <thead>
+                    <tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Sous-total</th></tr>
+                    </thead>
+                    <tbody>
+                    <% for (const ligne of details) { %>
+                        <tr>
+                            <td><%= ligne.nom_produit %></td>
+                            <td><%= ligne.quantite %></td>
+                            <td><%= Number(ligne.prix_unitaire_negocie).toFixed(2) %> $</td>
+                            <td><%= Number(ligne.sous_total).toFixed(2) %> $</td>
+                        </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+                <p class="ceps-total" style="margin-top:1rem; font-weight:700;">Total : <%= Number(order.montant_total).toFixed(2) %> $ — <span class="ceps-note-inline" style="font-weight:normal; font-size:0.9rem; color:#7c8a83;"><%= order.date_commande %></span></p>
+
+                <% if (order.statut === 'modifiee_adm') { %>
+                    <div class="ceps-alert ceps-alert-info" style="background:#e8f4fd; color:#1c6fd6; border:1px solid #bce0fd; padding:1rem; border-radius:8px; margin-top:1rem;">
+                        Le prix de cette commande a été modifié par un administrateur CEPS.
+                        <a href="/index.php?page=client_commande_depot&id=<%= order.id_commande %>" class="ceps-btn ceps-btn-petit" style="margin-left: 10px;">💰 Faire un dépôt</a>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+        <p class="ceps-note">Une commande "modifiée adm" signifie que le prix a été ajusté suite à une négociation. Discutez-en via le chat, et vous pouvez y envoyer un dépôt avant l'approbation finale.</p>
+    <% } %>
+</section>
+
+<%- include('../partials/footer') %>

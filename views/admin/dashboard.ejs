@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Tableau de bord CEPS Admin</h2>
+
+    <div class="ceps-stats-grid">
+        <div class="ceps-stat-card">
+            <span class="ceps-stat-valeur"><%= Number(gainDuJour).toFixed(2) %> $</span>
+            <span class="ceps-stat-label">Gain total aujourd'hui</span>
+        </div>
+        <div class="ceps-stat-card">
+            <span class="ceps-stat-valeur"><%= commandes.length %></span>
+            <span class="ceps-stat-label">Commandes en attente</span>
+        </div>
+        <div class="ceps-stat-card">
+            <span class="ceps-stat-valeur"><%= utilisateurs.length %></span>
+            <span class="ceps-stat-label">Utilisateurs enregistrés</span>
+        </div>
+    </div>
+
+    <div class="ceps-admin-menu" style="display:flex; flex-wrap:wrap; gap:0.8rem; margin:1.5rem 0;">
+        <a href="/index.php?page=admin_stock" class="ceps-btn">📦 Gestion du stock</a>
+        <a href="/index.php?page=admin_commandes" class="ceps-btn">🧾 Commandes à approuver</a>
+        <a href="/index.php?page=admin_chat" class="ceps-btn">💬 Chat clients</a>
+        <a href="/index.php?page=admin_utilisateurs" class="ceps-btn">👥 Utilisateurs</a>
+        <a href="/index.php?page=admin_commentaires" class="ceps-btn">⭐ Commentaires</a>
+        <a href="/index.php?page=admin_historique_ventes" class="ceps-btn">🧾 Historique des ventes</a>
+    </div>
+
+    <h3>Ventes par jour (détail par produit)</h3>
+    <table class="ceps-table">
+        <thead><tr><th>Jour</th><th>Produit</th><th>Quantité vendue</th><th>Gain</th></tr></thead>
+        <tbody>
+        <% for (const ligne of ventesJour) { %>
+            <tr>
+                <td><%= ligne.jour_vente %></td>
+                <td><%= ligne.nom_produit %></td>
+                <td><%= ligne.total_quantite %></td>
+                <td><%= Number(ligne.total_gain).toFixed(2) %> $</td>
+            </tr>
+        <% } %>
+        <% if (ventesJour.length === 0) { %>
+            <tr><td colspan="4">Aucune vente enregistrée pour le moment.</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top:2rem;">Modifier mon mot de passe (Admin CEPS)</h3>
+    <form method="post" action="/index.php?page=admin_mdp_modifier" class="ceps-form" onsubmit="return confirm('Confirmer le changement de mot de passe ?')">
+        <label>Ancien mot de passe <input type="password" name="ancien_mot_de_passe" required></label>
+        <label>Nouveau mot de passe <input type="password" name="nouveau_mot_de_passe" minlength="8" required></label>
+        <label>Confirmation <input type="password" name="confirmation" minlength="8" required></label>
+        <button type="submit" class="ceps-btn">Modifier</button>
+    </form>
+</section>
+
+<%- include('../partials/footer') %>

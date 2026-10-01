@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section ceps-form-page">
+    <h2>Connexion</h2>
+
+    <div style="background:#eef5f1; border-radius:8px; padding:0.8rem 1rem; margin-bottom:1.2rem; font-size:0.88rem;">
+        <strong>Comptes de test disponibles :</strong><br>
+        • Admin : <code>admin@ceps.com</code> / <code>Admin1234</code><br>
+        • Caissier : <code>caissier@ceps.com</code> / <code>Caissier1234</code><br>
+        • Client : <code>client@ceps.com</code> / <code>Client1234</code>
+    </div>
+
+    <form method="post" action="/index.php?page=login_traiter" class="ceps-form">
+        <label>Email
+            <input type="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+        </label>
+        <label>Mot de passe
+            <input type="password" name="mot_de_passe" required>
+        </label>
+        <button type="submit" class="ceps-btn ceps-btn-large">Se connecter</button>
+    </form>
+
+    <div class="ceps-separateur">ou</div>
+
+    <!-- Connexion via Google (Google Identity Services) -->
+    <div id="g_id_onload"
+         data-client_id="<%= GOOGLE_CLIENT_ID %>"
+         data-callback="gererReponseGoogle"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-width="100%"></div>
+
+    <form id="formGoogle" method="post" action="/index.php?page=login_google" style="display:none;">
+        <input type="hidden" name="credential" id="googleCredential">
+    </form>
+
+    <script>
+        function gererReponseGoogle(reponse) {
+            document.getElementById('googleCredential').value = reponse.credential;
+            document.getElementById('formGoogle').submit();
+        }
+    </script>
+
+    <p style="margin-top: 1.5rem; text-align: center;">Pas encore de compte ? <a href="/index.php?page=inscription">Créer un compte</a></p>
+</section>
+
+<%- include('../partials/footer') %>

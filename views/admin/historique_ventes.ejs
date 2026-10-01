@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Historique de toutes les ventes</h2>
+    <p class="ceps-note">Chaque vente (commande client approuvée ou vente en caisse) reste enregistrée ici en permanence et peut être réimprimée à tout moment.</p>
+
+    <table class="ceps-table">
+        <thead><tr><th>N°</th><th>Client / Opérateur</th><th>Type</th><th>Montant</th><th>Paiement</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+        <% for (const v of ventes) { %>
+            <tr>
+                <td>#<%= v.id_commande %></td>
+                <td><%= v.prenom %> <%= v.nom %></td>
+                <td><%= v.nom_role === 'caissier' ? '🏪 Vente en caisse' : '🛒 Commande en ligne' %></td>
+                <td><%= Number(v.montant_total).toFixed(2) %> $</td>
+                <td><%= (v.mode_paiement || '').toUpperCase() %></td>
+                <td><%= v.date_approbation || v.date_commande %></td>
+                <td><a href="/index.php?page=admin_commande_recu&id=<%= v.id_commande %>" class="ceps-btn ceps-btn-petit" target="_blank">🧾 Reçu</a></td>
+            </tr>
+        <% } %>
+        <% if (ventes.length === 0) { %>
+            <tr><td colspan="7">Aucune vente enregistrée pour le moment.</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('../partials/footer') %>

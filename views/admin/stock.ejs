@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Gestion du stock</h2>
+
+    <div class="ceps-stats-grid">
+        <div class="ceps-stat-card">
+            <span class="ceps-stat-valeur"><%= Number(gainDuJour).toFixed(2) %> $</span>
+            <span class="ceps-stat-label">Gain aujourd'hui</span>
+        </div>
+    </div>
+
+    <form method="get" action="/index.php" class="ceps-form-inline" style="margin: 1.2rem 0;">
+        <input type="hidden" name="page" value="admin_stock">
+        <input type="text" name="recherche" placeholder="Rechercher par nom ou ID..." value="<%= typeof recherche !== 'undefined' ? recherche : '' %>">
+        <button type="submit" class="ceps-btn">Rechercher</button>
+    </form>
+
+    <h3>Ajouter un produit</h3>
+    <form method="post" action="/index.php?page=admin_produit_ajouter" enctype="multipart/form-data" class="ceps-form">
+        <label>Nom <input type="text" name="nom_produit" required></label>
+        <label>Description <textarea name="description" rows="2"></textarea></label>
+        <label>Catégorie
+            <select name="id_categorie" required>
+                <% for (const cat of categories) { %>
+                    <option value="<%= cat.id_categorie %>"><%= cat.nom_categorie %> (<%= cat.type %>)</option>
+                <% } %>
+            </select>
+        </label>
+        <label>Prix unitaire ($) <input type="number" step="0.01" name="prix_unitaire" required></label>
+        <label>Quantité initiale en stock <input type="number" name="quantite_initiale" value="0" required></label>
+        <label>Image <input type="file" name="image" accept="image/*"></label>
+        <button type="submit" class="ceps-btn">Ajouter</button>
+    </form>
+
+    <h3 style="margin-top:2rem;">Produits enregistrés</h3>
+    <table class="ceps-table">
+        <thead><tr><th>ID</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Actions</th></tr></thead>
+        <tbody>
+        <% for (const produit of produits) { %>
+            <tr class="<%= produit.quantite_disponible <= (produit.seuil_alerte || 10) ? 'ceps-stock-faible' : '' %>">
+                <td>#<%= produit.id_produit %></td>
+                <td><%= produit.nom_produit %></td>
+                <td><%= produit.nom_categorie %></td>
+                <td><%= Number(produit.prix_unitaire).toFixed(2) %> $</td>
+                <td>
+                    <form method="post" action="/index.php?page=admin_produit_stock" class="ceps-form-inline">
+                        <input type="hidden" name="id" value="<%= produit.id_produit %>">
+                        <input type="number" name="quantite" value="<%= produit.quantite_disponible %>" style="width:70px; padding:0.3rem;">
+                        <button type="submit" class="ceps-btn ceps-btn-petit">Ajuster</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="/index.php?page=admin_produit_supprimer" class="ceps-form-inline"
+                          onsubmit="return confirm('Supprimer ce produit ?')">
+                        <input type="hidden" name="id" value="<%= produit.id_produit %>">
+                        <button type="submit" class="ceps-lien-danger ceps-btn-lien">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+        <% if (produits.length === 0) { %>
+            <tr><td colspan="6">Aucun produit trouvé.</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('../partials/footer') %>

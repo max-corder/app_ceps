@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Conversation client</h2>
+
+    <div class="ceps-chat-fenetre" style="background:#fff; border:1px solid #dfe7e3; border-radius:10px; padding:1.2rem; max-height:450px; overflow-y:auto; margin-bottom:1.5rem; display:flex; flex-direction:column; gap:0.8rem;">
+        <% for (const message of messages) { %>
+            <% if (message.expediteur === 'system') { %>
+                <div class="ceps-message ceps-message-system" style="background:#f4f8f6; border-left:4px solid #0f8a5f; padding:0.8rem; border-radius:6px; font-size:0.9rem;">
+                    <p style="margin:0;"><%= message.contenu %></p>
+                    <% if (message.preuve_paiement) { %>
+                        <div style="margin-top:0.5rem;">
+                            <a href="/uploads/preuves/<%= message.preuve_paiement %>" target="_blank">
+                                <img src="/uploads/preuves/<%= message.preuve_paiement %>" alt="Preuve de paiement" class="ceps-preuve-img" style="max-width:150px; border-radius:6px; border:1px solid #ccc;">
+                            </a>
+                        </div>
+                    <% } %>
+                    <small style="color:#7c8a83; display:block; margin-top:0.3rem;"><%= message.date_envoi %></small>
+                </div>
+            <% } else { %>
+                <div class="ceps-message ceps-message-<%= message.expediteur === 'admin' ? 'moi' : 'autre' %>" style="max-width:75%; padding:0.8rem 1rem; border-radius:12px; align-self:<%= message.expediteur === 'admin' ? 'flex-end' : 'flex-start' %>; background:<%= message.expediteur === 'admin' ? '#0f8a5f' : '#eef5f1' %>; color:<%= message.expediteur === 'admin' ? '#fff' : '#1f2d27' %>;">
+                    <strong><%= message.expediteur === 'admin' ? 'CEPS (Moi)' : 'Client' %></strong>
+                    <p style="margin:0.3rem 0 0 0;"><%= message.contenu %></p>
+                    <small style="opacity:0.8; display:block; margin-top:0.3rem; font-size:0.75rem;"><%= message.date_envoi %></small>
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+
+    <form method="post" action="/index.php?page=admin_chat_repondre" class="ceps-form-chat" style="display:flex; gap:0.8rem;">
+        <input type="hidden" name="id_conversation" value="<%= idConversation %>">
+        <textarea name="contenu" rows="2" placeholder="Votre réponse..." required style="flex:1; border:1px solid #dfe7e3; border-radius:8px; padding:0.8rem;"></textarea>
+        <button type="submit" class="ceps-btn">Répondre</button>
+    </form>
+
+    <div style="margin-top:1.5rem;">
+        <a href="/index.php?page=admin_chat" class="ceps-btn ceps-btn-secondaire">← Retour aux conversations</a>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

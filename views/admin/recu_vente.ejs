@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de vente #<%= idCommande %> — CEPS</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; color: #1f2d27; margin: 0; padding: 2rem; }
+        .recu { max-width: 700px; margin: 0 auto; border: 1px solid #dfe7e3; border-radius: 10px; padding: 2rem; }
+        .recu-entete { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f8a5f; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .recu-entete img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        .recu-entete h1 { font-size: 1.3rem; color: #0a6644; margin: 0; }
+        .recu-entete p { margin: .1rem 0; font-size: .85rem; color: #55655d; }
+        .recu-infos { display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: .9rem; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        th, td { padding: .6rem .5rem; border-bottom: 1px solid #dfe7e3; text-align: left; font-size: .9rem; }
+        th { background: #eef5f1; color: #0a6644; }
+        .recu-total { text-align: right; font-size: 1.2rem; font-weight: 700; color: #0a6644; }
+        .recu-pied { margin-top: 2rem; text-align: center; font-size: .8rem; color: #7c8a83; }
+        .no-print { text-align: center; margin-top: 1.5rem; }
+        .btn-imprimer { background: #0f8a5f; color: #fff; border: none; padding: .7rem 1.6rem; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+        .btn-imprimer:hover { background: #0a6644; }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; }
+            .recu { border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="recu">
+        <div class="recu-entete">
+            <div>
+                <h1>CENTRE D'ÉQUIPEMENT &amp; PRODUITS DE SANTÉ</h1>
+                <p>Email : centreequipementproduitsante@gmail.com</p>
+                <p>Téléphone : +509 41-10-36-02</p>
+            </div>
+            <img src="/assets/images/logo_ceps.jpeg" alt="Logo CEPS">
+        </div>
+
+        <div class="recu-infos">
+            <div>
+                <strong>Reçu de vente #<%= idCommande %></strong><br>
+                Date : <%= order.date_approbation || order.date_commande %>
+            </div>
+            <div>
+                <strong>Client / Opérateur :</strong> <%= order.prenom %> <%= order.nom %><br>
+                <%= order.email %><% if (order.telephone) { %> — <%= order.telephone %><% } %>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Produit</th><th>Quantité</th><th>Prix unitaire</th><th>Sous-total</th></tr>
+            </thead>
+            <tbody>
+                <% for (const ligne of details) { %>
+                <tr>
+                    <td><%= ligne.nom_produit %></td>
+                    <td><%= ligne.quantite %></td>
+                    <td><%= Number(ligne.prix_unitaire_negocie).toFixed(2) %> $</td>
+                    <td><%= Number(ligne.sous_total).toFixed(2) %> $</td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <p class="recu-total">Total payé : <%= Number(order.montant_total).toFixed(2) %> $</p>
+
+        <p class="recu-pied">Merci pour votre confiance — CEPS, votre partenaire santé.</p>
+    </div>
+
+    <div class="no-print">
+        <button class="btn-imprimer" onclick="window.print()">🖨️ Imprimer / Enregistrer en PDF</button>
+        <p style="font-size:.8rem; color:#7c8a83; margin-top:.6rem;">
+            Dans la fenêtre d'impression, choisissez "Enregistrer au format PDF" comme imprimante pour obtenir un fichier PDF.
+        </p>
+        <% const retourPage = (user && user.nom_role === 'caissier') ? 'caissier_dashboard' : 'admin_commandes'; %>
+        <a href="/index.php?page=<%= retourPage %>" style="display:block; margin-top:1rem; color:#0a6644;">← Retour</a>
+    </div>
+</body>
+</html>

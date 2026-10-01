@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Conversations clients</h2>
+
+    <table class="ceps-table">
+        <thead><tr><th>Client</th><th>Dernier message</th><th>Non lus</th><th></th></tr></thead>
+        <tbody>
+        <% for (const conv of conversations) { %>
+            <tr>
+                <td><%= conv.prenom %> <%= conv.nom %></td>
+                <td><%= conv.dernier_message.length > 60 ? conv.dernier_message.slice(0, 60) + '...' : conv.dernier_message %></td>
+                <td><%= conv.non_lus > 0 ? '<span class="ceps-badge" style="background:#ff3d81; color:#fff;">' + conv.non_lus + '</span>' : '—' %></td>
+                <td><a href="/index.php?page=admin_chat_conversation&id=<%= conv.id_conversation %>" class="ceps-btn ceps-btn-petit">Ouvrir</a></td>
+            </tr>
+        <% } %>
+        <% if (conversations.length === 0) { %>
+            <tr><td colspan="4">Aucune conversation.</td></tr>
+        <% } %>
+        </tbody>
+    </table>
+</section>
+
+<%- include('../partials/footer') %>

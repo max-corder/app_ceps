@@ -1,6 +1,0 @@
-# CEPS - Sécurité de base du dossier public
-Options -Indexes
-
-<FilesMatch "\.(sql|log|env)$">
-    Require all denied
-</FilesMatch>

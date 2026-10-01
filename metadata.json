@@ -1,0 +1,8 @@
+{
+  "name": "CEPS - Centre Équipements Produit de Santé",
+  "description": "Boutique en ligne et gestion de stock pour produits pharmaceutiques et cosmétiques",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

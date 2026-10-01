@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+
+<section class="ceps-section">
+    <h2>Commentaires des clients</h2>
+
+    <% for (const com of commentaires) { 
+        const contenu = com.contenu_json || {};
+    %>
+        <div class="ceps-card ceps-commentaire" style="margin-bottom:1.5rem; text-align:left;">
+            <strong><%= com.prenom %> <%= com.nom %></strong>
+            <span class="ceps-badge" style="margin-left:8px;">⭐ <%= contenu.note || 0 %>/5</span>
+            <p style="margin: 0.5rem 0;"><%= contenu.texte || '' %></p>
+            <small style="color:#7c8a83; display:block; margin-bottom:1rem;">
+                <%= com.date_commentaire %> — <%= com.publie_par_admin ? 'Réponse publiée' : 'En attente de réponse' %>
+            </small>
+
+            <form method="post" action="/index.php?page=admin_commentaire_publier" class="ceps-form-inline" onsubmit="return confirm('Publier cette réponse dans le chat du client ?')">
+                <input type="hidden" name="id_commentaire" value="<%= com.id_commentaire %>">
+                <input type="hidden" name="id_utilisateur" value="<%= com.id_utilisateur %>">
+                <input type="text" name="reponse" placeholder="Répondre (envoyé dans le chat du client)..." required style="flex:1;">
+                <button type="submit" class="ceps-btn ceps-btn-petit">Publier la réponse</button>
+            </form>
+        </div>
+    <% } %>
+    <% if (commentaires.length === 0) { %>
+        <p>Aucun commentaire reçu pour le moment.</p>
+    <% } %>
+</section>
+
+<%- include('../partials/footer') %>
